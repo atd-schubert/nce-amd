@@ -53,3 +53,22 @@ describe('Basic functions in NCE', function(){
     return done(new Error("Can not uninstall extension"));
   });
 });
+describe('Methods of the extension', function(){
+  var nce = new NCE({amd:{dumpPath:__dirname + "/amd"}});
+  
+  var logger = Logger(nce); logger.install(); logger.activate();
+  
+  var ext = Ext(nce); ext.install(); ext.activate();
+  
+  var fnStr = 'define([], "test", function(){console.log("It works...");});';
+  
+  it('should define a function', function(done){
+    ext.define("test", fnStr, done);
+  });
+  it('should get a defined function', function(done){
+    ext.get("test", function(err, code){
+      if(code.toString() === fnStr) return done();
+      return done("Wrong Code");
+    });
+  });
+});

@@ -120,22 +120,21 @@ module.exports = function(nce){
       if(opts.minify === true) opts.minify = {};
       opts.fromSting = true;
     }
-    
     if(opts.minify) {
       code = UglifyJS.minify(code, opts.minify);
     }
     
-    ext.on("define", {name:name, code: code});
-    ext.on("define:"+name, {name:name, code: code});
+    ext.emit("define", {name:name, code: code});
+    ext.emit("define:"+name, {name:name, code: code});
     
-    return fs.writeFile(ext.config.dumpPath + "/" + name + ".js", cb);
+    return fs.writeFile(ext.config.dumpPath + "/" + name + ".js", code, cb);
   };
   ext.defineCDN = function(name, url, cb, opts){ // TODO: save to dump path (and do nothing else. maybe check deps)...
     opts = opts || {};
     cb = cb || function(){};
     
-    ext.on("defineCDN", {name:name, url: url});
-    ext.on("defineCDN:"+name, {name:name, url: url});
+    ext.emit("defineCDN", {name:name, url: url});
+    ext.emit("defineCDN:"+name, {name:name, url: url});
     
     cdn[name] = url;
     cb(null, true);
@@ -151,8 +150,8 @@ module.exports = function(nce){
     fs.unlink(ext.config.dumpPath + "/" + name + ".js", function(err){
       if(err && err.message.indexOf("ENOENT") === 0) return cb();
       if(err) return cb(err);
-      ext.on("obscure", {name:name});
-      ext.on("obscure:"+name, {name:name});
+      ext.emit("obscure", {name:name});
+      ext.emit("obscure:"+name, {name:name});
       return cb();
     })
   };
@@ -170,22 +169,22 @@ module.exports = function(nce){
       name: name,
       result: ""
     };
-    ext.on("render", obj);
-    ext.on("render:"+name, obj);
+    ext.emit("render", obj);
+    ext.emit("render:"+name, obj);
   };
   /*
   ext.defineSet = function(name, deps){
-    ext.on("define", {name:name, dependencies: deps});
-    ext.on("define:"+name, {name:name, dependencies: deps});
+    ext.emit("define", {name:name, dependencies: deps});
+    ext.emit("define:"+name, {name:name, dependencies: deps});
   };
   ext.renderSet = function(name, cb, opts){
     var result = "";
-    ext.on("renderSet", {name:name, result: result});
-    ext.on("renderSet:"+name, {name:name, result: result});
+    ext.emit("renderSet", {name:name, result: result});
+    ext.emit("renderSet:"+name, {name:name, result: result});
   };
   ext.obscureSet = function(name, deps){
-    ext.on("obscureSet", {name:name});
-    ext.on("obscureSet:"+name, {name:name});
+    ext.emit("obscureSet", {name:name});
+    ext.emit("obscureSet:"+name, {name:name});
   };
   */
   return ext;

@@ -31,5 +31,7 @@
     "nce": "0.0.1",
     "nce-winston": "0.0.2"
   },
-  "peerDependencies": {}
+  "peerDependencies": {
+    "nce-winston": "0.0.2"
+  }
 }
