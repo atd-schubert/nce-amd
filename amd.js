@@ -46,9 +46,8 @@ module.exports = function(nce){
 //# Private declarations:
   var cdn = {};
   var router = function(req, res, next){
-    // var backend = nce.getExtension("backend");
-    if(req.url.substr(0, backend.config.route.length) === backend.config.route) {
-      if(/^\/require.js/.test(req.url.substr(backend.config.route.length))) {
+    if(req.url.substr(0, ext.config.route.length) === ext.config.route) {
+      if(/^\/require.js/.test(req.url.substr(ext.config.route.length))) {
         var stream = fs.createReadStream(__dirname + "/assets/require.js");
         // TODO: handle 304!
         var etag = md5(ext.package.version);
@@ -73,7 +72,7 @@ module.exports = function(nce){
           if(data) res.write(data);
           res.write([
             'require.config({',
-              'baseUrl: "'+backend.config.route+'",',
+              'baseUrl: "'+ext.config.route+'",',
               'paths: '+ JSON.stringify(cdn),
             '});'
         ].join(""));
@@ -82,7 +81,7 @@ module.exports = function(nce){
       };
       
       
-      var path = ext.config.dumpPath + req.url.substr(backend.config.route.length);
+      var path = ext.config.dumpPath + req.url.substr(ext.config.route.length);
       
       // TODO: security! Don't make able to go in dirs upper then lib-root!
       
