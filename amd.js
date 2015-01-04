@@ -47,8 +47,8 @@ module.exports = function(nce){
   var cdn = {};
   var router = function(req, res, next){
     if(req.url.substr(0, ext.config.route.length) === ext.config.route) {
-      if(/^\/require.js/.test(req.url.substr(ext.config.route.length))) {
-        var stream = fs.createReadStream(__dirname + "/assets/require.js");
+      if(/^\/requirejs.js/.test(req.url.substr(ext.config.route.length))) {
+        var stream = fs.createReadStream(__dirname + "/assets/requirejs.js");
         // TODO: handle 304!
         var etag = md5(ext.package.version);
         if(req.headers.etag === etag) {
@@ -85,7 +85,7 @@ module.exports = function(nce){
       
       // TODO: security! Don't make able to go in dirs upper then lib-root!
       
-      return fs.stat(function(err, stats){
+      return fs.stat(path, function(err, stats){
         if(err && err.message.indexOf("ENOENT") === 0) return next();
         if(err) return next(err);
         var etag = md5(stats.ino + stats.mtime.getTime());
