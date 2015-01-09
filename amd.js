@@ -46,7 +46,7 @@ module.exports = function(nce){
   
 //# Private declarations:
   var cdn = {};
-  var router = function(req, res, next){
+  var router = function amd(req, res, next){
     if(req.url.substr(0, ext.config.route.length) === ext.config.route) {
       if(/^\/requirejs.js/.test(req.url.substr(ext.config.route.length))) {
         var stream = fs.createReadStream(__dirname + "/assets/requirejs.js");
