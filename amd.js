@@ -3,6 +3,7 @@
 var fs = require("fs");
 var UglifyJS = require("uglify-js");
 var md5 = require("MD5");
+var path = require("path");
 
 module.exports = function(nce){
   if(!nce) throw new Error("You have to specify the nce object");
@@ -80,11 +81,16 @@ module.exports = function(nce){
       };
       
       
-      var path = ext.config.dumpPath + req.url.substr(ext.config.route.length);
-      
-      // TODO: security! Don't make able to go in dirs upper then lib-root!
-      
-      return fs.stat(path, function(err, stats){
+      var amdPath = ext.config.dumpPath + req.url.substr(ext.config.route.length);
+      if(path.relative(ext.config.dumpPath, amdPath).substr(0,2)=== "..") {// TODO #4: security! Don't make able to go in dirs upper then lib-root!
+        res.writeHead(403, {
+          "content-type":"text/plain"
+        });
+        var msg = "It is forbidden to requested a file from above of the amd-root!";
+        ext.logger.warn(msg, req);
+        return res.end(msg);
+      }
+      return fs.stat(amdPath, function(err, stats){
         if(err && err.message.indexOf("ENOENT") === 0) return next();
         if(err) return next(err);
         var etag = md5(stats.ino + stats.mtime.getTime());
@@ -97,7 +103,7 @@ module.exports = function(nce){
           });
           return res.end();
         }
-        var stream = fs.createReadStream(path);
+        var stream = fs.createReadStream(amdPath);
         
         res.writeHead(200, {
           "content-type":"text/javascript",
@@ -112,7 +118,7 @@ module.exports = function(nce){
   };
 
 //# Public declarations and exports:
-  ext.define = function(name, code, cb, opts){ // TODO: save to dump path (and do nothing else. maybe check deps)...
+  ext.define = function(name, code, cb, opts){
     opts = opts || {};
     if(opts.minify !== false) {
       if(opts.minify === true) opts.minify = {};
@@ -127,7 +133,7 @@ module.exports = function(nce){
     
     return fs.writeFile(ext.config.dumpPath + "/" + name + ".js", code, cb);
   };
-  ext.defineCDN = function(name, url, cb, opts){ // TODO: save to dump path (and do nothing else. maybe check deps)...
+  ext.defineCDN = function(name, url, cb, opts){
     opts = opts || {};
     cb = cb || function(){};
     
