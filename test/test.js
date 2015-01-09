@@ -54,21 +54,32 @@ describe('Basic functions in NCE', function(){
   });
 });
 describe('Methods of the extension', function(){
-  var nce = new NCE({amd:{dumpPath:__dirname + "/../example4test.js"}});
+  var nce = new NCE({amd:{dumpPath:__dirname + "/../dump4test"}});
   var ext = Ext(nce);
   var extMgr = ExtMgr(nce);
   extMgr.activateExtension(extMgr);
   extMgr.activateExtension(ext);
   
-  var fnStr = fs.readFileSync(__dirname + "/example4amd.js");
+  var fnStr = fs.readFileSync(__dirname + "/../example4test.js").toString();
   
-  it('should define a function', function(done){
-    ext.define("test", fnStr, done);
+  it('should define a function without minifing', function(done){
+    ext.define("test", fnStr, done, {minify:false});
   });
   it('should get a defined function', function(done){
     ext.get("test", function(err, code){
-      if(code.toString().indexOf('define([],"test",function(){') !== -1) return done();
-      return done("Wrong Code");
+      if(code.toString() === fnStr) return done();
+      return done(new Error("Wrong Code"));
+    });
+  });
+  it('should define a function with minifing', function(done){
+    ext.define("test", fnStr, done);
+  });
+  it('should get minified code', function(done){
+    ext.get("test", function(err, code){
+      if(fnStr.length <= code.toString().length) {
+        return done(new Error("Code was not minified"));
+      }
+      return done();
     });
   });
 });

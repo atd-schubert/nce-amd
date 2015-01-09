@@ -122,10 +122,11 @@ module.exports = function(nce){
     opts = opts || {};
     if(opts.minify !== false) {
       if(opts.minify === true) opts.minify = {};
-      opts.fromSting = true;
+      opts.minify = opts.minify || {};
+      opts.minify.fromString = true;
     }
     if(opts.minify) {
-      code = UglifyJS.minify(code, opts.minify);
+      code = UglifyJS.minify(code, opts.minify).code;
     }
     
     ext.emit("define", {name:name, code: code});
