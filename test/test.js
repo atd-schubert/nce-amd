@@ -1,8 +1,8 @@
 "use strict";
 
 var NCE = require("nce");
+var ExtMgr = require("nce-extension-manager");
 var Ext = require("../");
-var Logger = require("nce-winston");
 
 describe('Basic integration in NCE', function(){
   var nce = new NCE();
@@ -14,17 +14,16 @@ describe('Basic integration in NCE', function(){
 });
 describe('Basic functions in NCE', function(){
   var nce = new NCE();
-  
-  var logger = Logger(nce); logger.install(); logger.activate();
-  
   var ext = Ext(nce);
+  var extMgr = ExtMgr(nce);
+  extMgr.activateExtension(extMgr);
   
   it('should be installable', function(done){
-    if(ext.install()) return done();
+    if(extMgr.installExtension(ext) && ext.status === "installed") return done();
     return done(new Error("Can not install extension"));
   });
   it('should be activatable', function(done){
-    if(ext.activate()) return done();
+    if(extMgr.activateExtension(ext) && ext.status === "activated") return done();
     return done(new Error("Can not activate extension"));
   });
   it('should be deactivatable', function(done){
@@ -55,10 +54,10 @@ describe('Basic functions in NCE', function(){
 });
 describe('Methods of the extension', function(){
   var nce = new NCE({amd:{dumpPath:__dirname + "/amd"}});
-  
-  var logger = Logger(nce); logger.install(); logger.activate();
-  
-  var ext = Ext(nce); ext.install(); ext.activate();
+  var ext = Ext(nce);
+  var extMgr = ExtMgr(nce);
+  extMgr.activateExtension(extMgr);
+  extMgr.activateExtension(ext);
   
   var fnStr = 'define([], "test", function(){console.log("It works...");});';
   

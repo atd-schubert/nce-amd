@@ -50,7 +50,7 @@ module.exports = function(nce){
       if(/^\/requirejs.js/.test(req.url.substr(ext.config.route.length))) {
         var stream = fs.createReadStream(__dirname + "/assets/requirejs.js");
         // TODO: handle 304!
-        var etag = md5(ext.package.version);
+        var etag = md5(ext.name + "-" + ext.package.version);)
         if(req.headers.etag === etag) {
           res.writeHead(304, {
             "content-type":"text/javascript",
@@ -161,30 +161,6 @@ module.exports = function(nce){
     rg.push('></script>');
     return rg.join("");
   };
-  /*
-  ext.render = function(name, cb, opts){
-    var result = "";
-    var obj {
-      name: name,
-      result: ""
-    };
-    ext.emit("render", obj);
-    ext.emit("render:"+name, obj);
-  };
-  /*
-  ext.defineSet = function(name, deps){
-    ext.emit("define", {name:name, dependencies: deps});
-    ext.emit("define:"+name, {name:name, dependencies: deps});
-  };
-  ext.renderSet = function(name, cb, opts){
-    var result = "";
-    ext.emit("renderSet", {name:name, result: result});
-    ext.emit("renderSet:"+name, {name:name, result: result});
-  };
-  ext.obscureSet = function(name, deps){
-    ext.emit("obscureSet", {name:name});
-    ext.emit("obscureSet:"+name, {name:name});
-  };
-  */
+  
   return ext;
 }
