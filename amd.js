@@ -49,7 +49,6 @@ module.exports = function(nce){
     if(req.url.substr(0, ext.config.route.length) === ext.config.route) {
       if(/^\/requirejs.js/.test(req.url.substr(ext.config.route.length))) {
         var stream = fs.createReadStream(__dirname + "/assets/requirejs.js");
-        // TODO: handle 304!
         var etag = md5(ext.name + "-" + ext.package.version);)
         if(req.headers.etag === etag) {
           res.writeHead(304, {
