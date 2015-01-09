@@ -1,5 +1,6 @@
 "use strict";
 
+var fs = require("fs");
 var NCE = require("nce");
 var ExtMgr = require("nce-extension-manager");
 var Ext = require("../");
@@ -53,20 +54,20 @@ describe('Basic functions in NCE', function(){
   });
 });
 describe('Methods of the extension', function(){
-  var nce = new NCE({amd:{dumpPath:__dirname + "/amd"}});
+  var nce = new NCE({amd:{dumpPath:__dirname + "/../example4test.js"}});
   var ext = Ext(nce);
   var extMgr = ExtMgr(nce);
   extMgr.activateExtension(extMgr);
   extMgr.activateExtension(ext);
   
-  var fnStr = 'define([], "test", function(){console.log("It works...");});';
+  var fnStr = fs.readFileSync(__dirname + "/example4amd.js");
   
   it('should define a function', function(done){
     ext.define("test", fnStr, done);
   });
   it('should get a defined function', function(done){
     ext.get("test", function(err, code){
-      if(code.toString() === fnStr) return done();
+      if(code.toString().indexOf('define([],"test",function(){') !== -1) return done();
       return done("Wrong Code");
     });
   });
