@@ -155,8 +155,8 @@ module.exports = function(nce){
     fs.unlink(ext.config.dumpPath + "/" + name + ".js", function(err){
       if(err && err.message.indexOf("ENOENT") === 0) return cb();
       if(err) return cb(err);
-      ext.emit("obscure", {name:name});
-      ext.emit("obscure:"+name, {name:name});
+      ext.emit("undefine", {name:name});
+      ext.emit("undefine:"+name, {name:name});
       return cb();
     })
   };
