@@ -134,8 +134,7 @@ module.exports = function(nce){
     
     return fs.writeFile(ext.config.dumpPath + "/" + name + ".js", code, cb);
   };
-  ext.defineCDN = function(name, url, cb, opts){
-    opts = opts || {};
+  ext.defineCDN = function(name, url, cb){
     cb = cb || function(){};
     
     ext.emit("defineCDN", {name:name, url: url});
