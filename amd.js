@@ -82,7 +82,7 @@ module.exports = function(nce){
       
       
       var amdPath = ext.config.dumpPath + req.url.substr(ext.config.route.length);
-      if(path.relative(ext.config.dumpPath, amdPath).substr(0,2)=== "..") {// TODO #4: security! Don't make able to go in dirs upper then lib-root!
+      if(path.relative(ext.config.dumpPath, amdPath).substr(0,2)=== "..") {// Don't make able to go in dirs upper then lib-root!
         res.writeHead(403, {
           "content-type":"text/plain"
         });
@@ -159,7 +159,7 @@ module.exports = function(nce){
       return cb();
     })
   };
-  ext.mkScriptTag = function(mainName){ // TODO:
+  ext.mkScriptTag = function(mainName){
     var rg = ["<script "];
     if(mainName) rg.push('data-main="'+ mainName + '" ');
     rg.push('src="'+ext.config.route+'/require.js"');
