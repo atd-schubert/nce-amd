@@ -5,7 +5,7 @@ This is an nce extension for [Asynchronous Module Definition](https://github.com
 ## How to install
 Install with npm: `npm install --save nce-amd`
 
-Integrate in NCE with the [extension-manager](https://www.npmjs.com/package/nce-extension-manager):
+Integrate in NCE with the [extension-manager](https://github.com/atd-schubert/nce-extension-manager):
 
 ```
 var NCE = require("nce");
