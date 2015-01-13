@@ -18,10 +18,9 @@ var amd = extMgr.getActivatedExtension("amd");
 ## How to use
 ### Config settings
 You are able to use the following [config-settings](https://github.com/atd-schubert/node-nce/wiki/Extension-Class#configuration) with their defaults:
-
-    * `route: "/amd"`: Sub-URL to listen
-    * `dumpPath: process.cwd() + "/amd"`: Directory to dump files
-    * `logger: {}`: Settings for [logger-extension](https://github.com/atd-schubert/nce-winston)
+* `route: "/amd"`: Sub-URL to listen
+* `dumpPath: process.cwd() + "/amd"`: Directory to dump files
+* `logger: {}`: Settings for [logger-extension](https://github.com/atd-schubert/nce-winston)
 
 ### Basic methods
 #### ext.define(name, code, cb, opts)
